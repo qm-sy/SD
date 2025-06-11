@@ -46,7 +46,7 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>..\Output\</OutputDirectory>
-          <OutputName>KP_SD_QDC01B_HW1.74_SW001_20250514_Beta001</OutputName>
+          <OutputName>KP_SD_QDC01B_HW1.74_SW001_20250514</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>

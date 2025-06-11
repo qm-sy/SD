@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.7.0   COMMON                                                            06/03/2025 16:23:39 PAGE 1   
+C51 COMPILER V9.60.7.0   COMMON                                                            06/10/2025 17:12:09 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE COMMON
@@ -20,92 +20,90 @@ line level    source
    9          **/
   10          void Tim3_ISR( void ) interrupt 19
   11          {
-  12   1      
-  13   1          static uint16_t temp_scan_cnt = 0;
+  12   1          static uint16_t temp_scan_cnt = 0;
+  13   1          static uint16_t AC_connect_cnt = 0;
   14   1          static uint8_t channel1_cnt,channel2_cnt,channel3_cnt = 0;
-  15   1          static uint16_t gonglv_time = 0;
-  16   1          static uint16_t ac220_flag_cnt = 0;
-  17   1      
-  18   1          /* 1, Signal_IN状态查询           */
-  19   1          if( Signal_IN == 1 )
-  20   1          {
-  21   2              ac_dc.signal_in_flag = 1;
-  22   2          }else
-  23   1          {
-  24   2              ac_dc.signal_in_flag = 0;
-  25   2          }
-  26   1      
-  27   1          /* 2, temp 上报 1s/次                             */
-  28   1          if( temp.temp_scan_flag == 0 )
-  29   1          {
-  30   2              temp_scan_cnt++;
-  31   2              if( temp_scan_cnt == 100 )
-  32   2              {
-  33   3                  temp.temp_scan_flag = 1;
-  34   3                  temp_scan_cnt = 0;
-  35   3              }
-  36   2          }
-  37   1          
-  38   1          /*3, 检测220V是否接入 5s关一次耗电计时，检测到220v输入再次开启计时*/
-  39   1          if( ac_dc.ac220_flag == 1 ) 
-  40   1          {
-  41   2              ac220_flag_cnt++;
-  42   2              if( ac220_flag_cnt == 500 )
-  43   2              {
-  44   3                  ac220_flag_cnt = 0;
-  45   3                  ac_dc.ac220_flag = 0;
-  46   3              }
-  47   2          }
-  48   1      
-  49   1          /*4, 耗电计时*/
-  50   1          if( ac_dc.ac220_flag == 1) 
-  51   1          {
-  52   2              if(( ac_dc.ac220_out1_enable == 1 ) && (ac_dc.ac220_out_temp_allow == 1))
-  53   2              {
-C51 COMPILER V9.60.7.0   COMMON                                                            06/03/2025 16:23:39 PAGE 2   
+  15   1          static uint16_t capacity_time = 0;
+  16   1      
+  17   1          /* 1, Signal_IN状态查询           */
+  18   1          if( Signal_IN == 1 )
+  19   1          {
+  20   2              ac_ctrl.signal_flag = 1;
+  21   2          }else
+  22   1          {
+  23   2              ac_ctrl.signal_flag = 0;
+  24   2          }
+  25   1      
+  26   1          /* 2, temp 上报 1s/次                             */
+  27   1          if( temp.scan_flag == 0 )
+  28   1          {
+  29   2              temp_scan_cnt++;
+  30   2              if( temp_scan_cnt == 100 )
+  31   2              {
+  32   3                  temp.scan_flag = 1;
+  33   3                  temp_scan_cnt  = 0;
+  34   3              }
+  35   2          }
+  36   1          
+  37   1          /*3, 检测220V是否接入 5s关一次耗电计时，检测到220v输入再次开启计时*/
+  38   1          if( ac_ctrl.connect_flag == 1 ) 
+  39   1          {
+  40   2              AC_connect_cnt++;
+  41   2              if( AC_connect_cnt == 500 )
+  42   2              {
+  43   3                  AC_connect_cnt = 0;
+  44   3                  ac_ctrl.connect_flag = 0;
+  45   3              }
+  46   2          }
+  47   1      
+  48   1          /*4, 耗电计时*/
+  49   1          if( ac_ctrl.connect_flag == 1) 
+  50   1          {
+  51   2              if(( ac_ctrl.channel1_enable == 1 ) && (ac_ctrl.temp_alarm_flag == 0))
+  52   2              {
+  53   3                  channel1_cnt++;
+C51 COMPILER V9.60.7.0   COMMON                                                            06/10/2025 17:12:09 PAGE 2   
 
-  54   3                  channel1_cnt++;
-  55   3              }
-  56   2              if(( ac_dc.ac220_out2_enable == 1 ) && (ac_dc.ac220_out_temp_allow == 1))
-  57   2              {
-  58   3                  channel2_cnt++;
-  59   3              }
-  60   2              if(( ac_dc.ac220_out3_enable == 1 ) && (ac_dc.ac220_out_temp_allow == 1))
-  61   2              {
-  62   3                  channel3_cnt++;
-  63   3              }
-  64   2          }
-  65   1          
-  66   1          gonglv_time = (channel1_cnt + channel2_cnt + channel3_cnt) * eeprom.ac220_level;
-  67   1      
-  68   1          if( gonglv_time >= 30000 )  //1s
-  69   1          {
-  70   2              gonglv.gonglv_s ++;
-  71   2              gonglv_time = 0;
-  72   2              channel1_cnt = channel2_cnt = channel3_cnt = 0;
-  73   2      
-  74   2              if( gonglv.gonglv_s == 60 )   //1min
-  75   2              {
-  76   3                  gonglv.gonglv_min++;
-  77   3                  gonglv.gonglv_s = 0;
+  54   3              }
+  55   2              if(( ac_ctrl.channel2_enable == 1 ) && (ac_ctrl.temp_alarm_flag == 0))
+  56   2              {
+  57   3                  channel2_cnt++;
+  58   3              }
+  59   2              if(( ac_ctrl.channel3_enable == 1 ) && (ac_ctrl.temp_alarm_flag == 0))
+  60   2              {
+  61   3                  channel3_cnt++;
+  62   3              }
+  63   2          }
+  64   1          
+  65   1          capacity_time = (channel1_cnt + channel2_cnt + channel3_cnt) * slave_06.power_level;
+  66   1          if( capacity_time >= 30000 )                    //1s
+  67   1          {
+  68   2              capacity.capacity_s ++;
+  69   2      
+  70   2              capacity_time = 0;
+  71   2              channel1_cnt = channel2_cnt = channel3_cnt = 0;
+  72   2      
+  73   2              if( capacity.capacity_s == 60 )             //1min
+  74   2              {
+  75   3                  capacity.capacity_min++;
+  76   3      
+  77   3                  capacity.capacity_s = 0;
   78   3      
-  79   3                  eeprom.gonglv_min = gonglv.gonglv_min;  //三路全开满功率1min记录一次
-  80   3                  gonglv.gonglv_record_flag = 1;
-  81   3      
-  82   3                  if( gonglv.gonglv_min == 60 )    //1h
-  83   3                  {
-  84   4                      gonglv.gonglv_h++;
-  85   4                      eeprom.gonglv_h_H = (gonglv.gonglv_h >> 8);
-  86   4                      eeprom.gonglv_h_L = gonglv.gonglv_h;
-  87   4                      gonglv.gonglv_min = 0;
-  88   4                  }
-  89   3              }
-  90   2          }
-  91   1      }
+  79   3                  capacity.record_flag = 1;   //满功率1分钟记录一次
+  80   3      
+  81   3                  if( capacity.capacity_min == 60 )       //1h
+  82   3                  {
+  83   4                      capacity.capacity_h++;
+  84   4      
+  85   4                      capacity.capacity_min = 0;
+  86   4                  }
+  87   3              }
+  88   2          }
+  89   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    356    ----
+   CODE SIZE        =    331    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =      9    ----
    PDATA SIZE       =   ----    ----

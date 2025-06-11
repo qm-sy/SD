@@ -28,11 +28,13 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
     }
 }
 
-void rs485_init( void )
+void RS485_Init( void )
 {
     RX1_485;
 	rs485.reflag = 0;
 	rs485.recount = 0;
     modbus.modbus_04_scan_flag  = 0;
     modbus.modbus_04_scan_allow = 1;
+
+    HAL_UART_Receive_IT(&huart1,&rs485.rcvbuf[rs485.recount],1);
 }

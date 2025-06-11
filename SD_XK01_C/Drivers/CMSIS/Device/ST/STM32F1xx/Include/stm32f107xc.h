@@ -13214,7 +13214,7 @@ typedef struct
 /* Bit definition for Ethernet DMA Bus Mode Register */
 #define ETH_DMABMR_AAB_Pos                     (25U)                           
 #define ETH_DMABMR_AAB_Msk                     (0x1UL << ETH_DMABMR_AAB_Pos)    /*!< 0x02000000 */
-#define ETH_DMABMR_AAB                         ETH_DMABMR_AAB_Msk              /* Address-Aligned beats */
+#define ETH_DMABMR_AAB                         ETH_DMABMR_AAB_Msk              /* Address-Aligned flickers */
 #define ETH_DMABMR_FPM_Pos                     (24U)                           
 #define ETH_DMABMR_FPM_Msk                     (0x1UL << ETH_DMABMR_FPM_Pos)    /*!< 0x01000000 */
 #define ETH_DMABMR_FPM                         ETH_DMABMR_FPM_Msk              /* 4xPBL mode */
@@ -13224,18 +13224,18 @@ typedef struct
 #define ETH_DMABMR_RDP_Pos                     (17U)                           
 #define ETH_DMABMR_RDP_Msk                     (0x3FUL << ETH_DMABMR_RDP_Pos)   /*!< 0x007E0000 */
 #define ETH_DMABMR_RDP                         ETH_DMABMR_RDP_Msk              /* RxDMA PBL */
-#define ETH_DMABMR_RDP_1Beat                   0x00020000U                     /* maximum number of beats to be transferred in one RxDMA transaction is 1 */
-#define ETH_DMABMR_RDP_2Beat                   0x00040000U                     /* maximum number of beats to be transferred in one RxDMA transaction is 2 */
-#define ETH_DMABMR_RDP_4Beat                   0x00080000U                     /* maximum number of beats to be transferred in one RxDMA transaction is 4 */
-#define ETH_DMABMR_RDP_8Beat                   0x00100000U                     /* maximum number of beats to be transferred in one RxDMA transaction is 8 */
-#define ETH_DMABMR_RDP_16Beat                  0x00200000U                     /* maximum number of beats to be transferred in one RxDMA transaction is 16 */
-#define ETH_DMABMR_RDP_32Beat                  0x00400000U                     /* maximum number of beats to be transferred in one RxDMA transaction is 32 */                
-#define ETH_DMABMR_RDP_4xPBL_4Beat             0x01020000U                     /* maximum number of beats to be transferred in one RxDMA transaction is 4 */
-#define ETH_DMABMR_RDP_4xPBL_8Beat             0x01040000U                     /* maximum number of beats to be transferred in one RxDMA transaction is 8 */
-#define ETH_DMABMR_RDP_4xPBL_16Beat            0x01080000U                     /* maximum number of beats to be transferred in one RxDMA transaction is 16 */
-#define ETH_DMABMR_RDP_4xPBL_32Beat            0x01100000U                     /* maximum number of beats to be transferred in one RxDMA transaction is 32 */
-#define ETH_DMABMR_RDP_4xPBL_64Beat            0x01200000U                     /* maximum number of beats to be transferred in one RxDMA transaction is 64 */
-#define ETH_DMABMR_RDP_4xPBL_128Beat           0x01400000U                     /* maximum number of beats to be transferred in one RxDMA transaction is 128 */  
+#define ETH_DMABMR_RDP_1flicker                   0x00020000U                     /* maximum number of flickers to be transferred in one RxDMA transaction is 1 */
+#define ETH_DMABMR_RDP_2flicker                   0x00040000U                     /* maximum number of flickers to be transferred in one RxDMA transaction is 2 */
+#define ETH_DMABMR_RDP_4flicker                   0x00080000U                     /* maximum number of flickers to be transferred in one RxDMA transaction is 4 */
+#define ETH_DMABMR_RDP_8flicker                   0x00100000U                     /* maximum number of flickers to be transferred in one RxDMA transaction is 8 */
+#define ETH_DMABMR_RDP_16flicker                  0x00200000U                     /* maximum number of flickers to be transferred in one RxDMA transaction is 16 */
+#define ETH_DMABMR_RDP_32flicker                  0x00400000U                     /* maximum number of flickers to be transferred in one RxDMA transaction is 32 */                
+#define ETH_DMABMR_RDP_4xPBL_4flicker             0x01020000U                     /* maximum number of flickers to be transferred in one RxDMA transaction is 4 */
+#define ETH_DMABMR_RDP_4xPBL_8flicker             0x01040000U                     /* maximum number of flickers to be transferred in one RxDMA transaction is 8 */
+#define ETH_DMABMR_RDP_4xPBL_16flicker            0x01080000U                     /* maximum number of flickers to be transferred in one RxDMA transaction is 16 */
+#define ETH_DMABMR_RDP_4xPBL_32flicker            0x01100000U                     /* maximum number of flickers to be transferred in one RxDMA transaction is 32 */
+#define ETH_DMABMR_RDP_4xPBL_64flicker            0x01200000U                     /* maximum number of flickers to be transferred in one RxDMA transaction is 64 */
+#define ETH_DMABMR_RDP_4xPBL_128flicker           0x01400000U                     /* maximum number of flickers to be transferred in one RxDMA transaction is 128 */  
 #define ETH_DMABMR_FB_Pos                      (16U)                           
 #define ETH_DMABMR_FB_Msk                      (0x1UL << ETH_DMABMR_FB_Pos)     /*!< 0x00010000 */
 #define ETH_DMABMR_FB                          ETH_DMABMR_FB_Msk               /* Fixed Burst */
@@ -13249,18 +13249,18 @@ typedef struct
 #define ETH_DMABMR_PBL_Pos                     (8U)                            
 #define ETH_DMABMR_PBL_Msk                     (0x3FUL << ETH_DMABMR_PBL_Pos)   /*!< 0x00003F00 */
 #define ETH_DMABMR_PBL                         ETH_DMABMR_PBL_Msk              /* Programmable burst length */
-#define ETH_DMABMR_PBL_1Beat                   0x00000100U                     /* maximum number of beats to be transferred in one TxDMA (or both) transaction is 1 */
-#define ETH_DMABMR_PBL_2Beat                   0x00000200U                     /* maximum number of beats to be transferred in one TxDMA (or both) transaction is 2 */
-#define ETH_DMABMR_PBL_4Beat                   0x00000400U                     /* maximum number of beats to be transferred in one TxDMA (or both) transaction is 4 */
-#define ETH_DMABMR_PBL_8Beat                   0x00000800U                     /* maximum number of beats to be transferred in one TxDMA (or both) transaction is 8 */
-#define ETH_DMABMR_PBL_16Beat                  0x00001000U                     /* maximum number of beats to be transferred in one TxDMA (or both) transaction is 16 */
-#define ETH_DMABMR_PBL_32Beat                  0x00002000U                     /* maximum number of beats to be transferred in one TxDMA (or both) transaction is 32 */                
-#define ETH_DMABMR_PBL_4xPBL_4Beat             0x01000100U                     /* maximum number of beats to be transferred in one TxDMA (or both) transaction is 4 */
-#define ETH_DMABMR_PBL_4xPBL_8Beat             0x01000200U                     /* maximum number of beats to be transferred in one TxDMA (or both) transaction is 8 */
-#define ETH_DMABMR_PBL_4xPBL_16Beat            0x01000400U                     /* maximum number of beats to be transferred in one TxDMA (or both) transaction is 16 */
-#define ETH_DMABMR_PBL_4xPBL_32Beat            0x01000800U                     /* maximum number of beats to be transferred in one TxDMA (or both) transaction is 32 */
-#define ETH_DMABMR_PBL_4xPBL_64Beat            0x01001000U                     /* maximum number of beats to be transferred in one TxDMA (or both) transaction is 64 */
-#define ETH_DMABMR_PBL_4xPBL_128Beat           0x01002000U                     /* maximum number of beats to be transferred in one TxDMA (or both) transaction is 128 */
+#define ETH_DMABMR_PBL_1flicker                   0x00000100U                     /* maximum number of flickers to be transferred in one TxDMA (or both) transaction is 1 */
+#define ETH_DMABMR_PBL_2flicker                   0x00000200U                     /* maximum number of flickers to be transferred in one TxDMA (or both) transaction is 2 */
+#define ETH_DMABMR_PBL_4flicker                   0x00000400U                     /* maximum number of flickers to be transferred in one TxDMA (or both) transaction is 4 */
+#define ETH_DMABMR_PBL_8flicker                   0x00000800U                     /* maximum number of flickers to be transferred in one TxDMA (or both) transaction is 8 */
+#define ETH_DMABMR_PBL_16flicker                  0x00001000U                     /* maximum number of flickers to be transferred in one TxDMA (or both) transaction is 16 */
+#define ETH_DMABMR_PBL_32flicker                  0x00002000U                     /* maximum number of flickers to be transferred in one TxDMA (or both) transaction is 32 */                
+#define ETH_DMABMR_PBL_4xPBL_4flicker             0x01000100U                     /* maximum number of flickers to be transferred in one TxDMA (or both) transaction is 4 */
+#define ETH_DMABMR_PBL_4xPBL_8flicker             0x01000200U                     /* maximum number of flickers to be transferred in one TxDMA (or both) transaction is 8 */
+#define ETH_DMABMR_PBL_4xPBL_16flicker            0x01000400U                     /* maximum number of flickers to be transferred in one TxDMA (or both) transaction is 16 */
+#define ETH_DMABMR_PBL_4xPBL_32flicker            0x01000800U                     /* maximum number of flickers to be transferred in one TxDMA (or both) transaction is 32 */
+#define ETH_DMABMR_PBL_4xPBL_64flicker            0x01001000U                     /* maximum number of flickers to be transferred in one TxDMA (or both) transaction is 64 */
+#define ETH_DMABMR_PBL_4xPBL_128flicker           0x01002000U                     /* maximum number of flickers to be transferred in one TxDMA (or both) transaction is 128 */
 #define ETH_DMABMR_DSL_Pos                     (2U)                            
 #define ETH_DMABMR_DSL_Msk                     (0x1FUL << ETH_DMABMR_DSL_Pos)   /*!< 0x0000007C */
 #define ETH_DMABMR_DSL                         ETH_DMABMR_DSL_Msk              /* Descriptor Skip Length */

@@ -6,7 +6,6 @@
 #include "usart.h"
 #include "modbus_rtu.h"
 
-#define SLAVE_ADDR      0x1B
 typedef struct  
 {
 	//作为从机时使用
@@ -20,7 +19,7 @@ typedef struct
 
 extern RS485 rs485;
 
-void rs485_init( void );
+void RS485_Init( void );
 
 #endif
 

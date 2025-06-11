@@ -34,6 +34,10 @@ static uint16_t MF52E_tab[NTCTabNum] =
     3964 /*125*/    												                                              
 };	
 
+void Temp_Init( void )
+{
+    temp.scan_flag = 0;
+}
 /**
  * @brief 查表 找到adc_val对应的temp
  *
@@ -53,6 +57,10 @@ static uint16_t LookupTable( uint16_t *temp_tab, uint8_t tab_num, uint16_t adc_v
 		{
 				if(( adc_val >= temp_tab[i] ) && ( adc_val < temp_tab[i+1]) )
 				temp_val = i;	
+                if( adc_val >= 3964 )
+                {
+                   temp_val = 125; 
+                }
 		}
 		return temp_val;
 }

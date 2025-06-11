@@ -6,15 +6,12 @@
 #include "power_crl.h"
 #include "stdio.h"
 
-#define NTC        4
+#define NTC1        4       
 
 typedef struct 
 {
-    uint8_t  temp_value1;   
-    uint8_t  temp_value2;  
-    uint8_t  temp_value3;  
-    uint8_t  temp_alarm_value;
-    uint8_t  temp_scan_flag;
+    uint8_t  NTC1_value;   
+    uint8_t  scan_flag;
 
     uint8_t  dht11_temp;
     uint8_t  dht11_humidity;
@@ -23,5 +20,6 @@ typedef struct
 extern TEMP temp;
 
 uint16_t get_temp( uint8_t channle_x );
+void Temp_Init( void );
 
 #endif

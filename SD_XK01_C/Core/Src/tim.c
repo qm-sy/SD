@@ -345,8 +345,8 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* tim_baseHandle)
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	static uint8_t key_scan_cnt = 0;
-	static uint8_t beat_delay_cnt = 0;
-  static uint8_t modbus_04_scan_cnt = 0;
+	static uint8_t flicker_delay_cnt = 0;
+  	static uint8_t modbus_04_scan_cnt = 0;
     
 	if( htim->Instance == htim5.Instance ) 			//timer5:T = 10ms
 	{
@@ -360,31 +360,32 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			}
 		}
 		
-		/* 				beat 				*/
-		if(( gui_beat.beat_switch == 1 ) && ( gui_beat.beat_start_flag == 0 ))
+		/* 				flicker 				*/
+		/*	图标闪烁开关使能 且闪烁标志位为0时 每隔300ms闪络一次*/
+		if(( gui_flicker.enable_flag == ENABLED ) && ( gui_flicker.start_flag == false ))
 		{
-			beat_delay_cnt++;
+			flicker_delay_cnt++;
 
 			/* 				300ms 刷新一次 				*/
-			if( beat_delay_cnt == 30 )
+			if( flicker_delay_cnt == 30 )
 			{
-        beat_delay_cnt = 0;
-				gui_beat.beat_start_flag = 1;
+        		flicker_delay_cnt = 0;
+				gui_flicker.start_flag = true;
 			}
 		}else
-    {
-      beat_delay_cnt = 0;
-    }
-     
-    if( modbus.modbus_04_scan_flag == 0)
-    {
-      modbus_04_scan_cnt++;
-      if( modbus_04_scan_cnt == 100 )
-      {
-        modbus_04_scan_cnt = 0;
-        modbus.modbus_04_scan_flag = 1;
-      }
-    }
+		{
+			flicker_delay_cnt = 0;
+		}
+		
+		if( modbus.modbus_04_scan_flag == 0)
+		{
+			modbus_04_scan_cnt++;
+			if( modbus_04_scan_cnt == 100 )
+			{
+				modbus_04_scan_cnt = 0;
+				modbus.modbus_04_scan_flag = 1;
+			}
+		}
 	}
 
 	if( htim->Instance == htim6.Instance ) 			//timer6:T = 1ms

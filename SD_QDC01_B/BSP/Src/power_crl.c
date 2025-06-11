@@ -1,7 +1,8 @@
 #include "power_crl.h"
 
-AC_DC ac_dc;
-GONGLV gonglv;
+SLAVE_06 slave_06;
+CAPACITY capacity;
+AC_CTRL ac_ctrl;
 
 /**
  * @brief	移相触发调用结构体初始化
@@ -10,12 +11,15 @@ GONGLV gonglv;
  *
  * @return  void
 **/
-void Power_Statu_Init( void )
+void Power_Init( void )
 {
-    ac_dc.zero_flag  = 0;
-    ac_dc.ac220_flag = 0;
-    temp.temp_scan_flag = 0;
-    AC_Out1 = AC_Out2 = AC_Out3 = 1;
+    ac_ctrl.zero_flag       = 0;
+    ac_ctrl.connect_flag    = 0;
+    ac_ctrl.temp_alarm_flag = 0;
+    ac_ctrl.channel1_enable = 0;
+    ac_ctrl.channel2_enable = 0;
+    ac_ctrl.channel3_enable = 0;
+    ac_ctrl.time_delay      = 56500;
 }
 
 /**
@@ -25,12 +29,10 @@ void Power_Statu_Init( void )
  *
  * @return  void
 **/
-void Power_consumption_Init( void )
+void Capacity_Init( void )
 {
-    gonglv.gonglv_cnt = 0;
-    gonglv.gonglv_min = 0;
-    gonglv.gonglv_h = 0;
-    gonglv.gonglv_record_flag = 0;
+    capacity.capacity_s = 0;
+    capacity.record_flag = 0;
 }
 
 /**
@@ -43,12 +45,11 @@ void Power_consumption_Init( void )
 void INT0_ISR( void ) interrupt 0
 {
     /* 1, 检测到外部中断后，等待THL\TLI后触发TIM1中断       */
-    TL1 = ac_dc.time_delay;				
-	TH1 = ac_dc.time_delay >> 8;				
+    TL1 = ac_ctrl.time_delay;				
+	TH1 = ac_ctrl.time_delay >> 8;				
 
-    ac_dc.zero_flag = 1;
-    ac_dc.ac220_flag = 1;
-
+    ac_ctrl.zero_flag = 1;
+    ac_ctrl.connect_flag = 1;
     /* 2, 定时器1开始计时，打开TIM1中断                     */
     TR1 = 1;				     
     ET1 = 1; 
@@ -64,20 +65,20 @@ void INT0_ISR( void ) interrupt 0
 void Tim1_ISR( void ) interrupt 3   //10ms
 {
     /* 1, 中断触发后，power_ch电平 由高电平变为低电平           */
-    if( ac_dc.zero_flag == 1 )
+    if( ac_ctrl.zero_flag == 1 )
     {
-        ac_dc.zero_flag = 0;
+        ac_ctrl.zero_flag = 0;
 
          /* 2, 温度允许，使能为1时可开启输出          */
-        if(( ac_dc.ac220_out1_enable == 1 ) && (ac_dc.ac220_out_temp_allow == 1))
+        if(( ac_ctrl.channel1_enable == 1 ) && (ac_ctrl.temp_alarm_flag == 0))
         {
             AC_Out1 = 0;
         }
-        if(( ac_dc.ac220_out2_enable == 1 ) && (ac_dc.ac220_out_temp_allow == 1))
+        if(( ac_ctrl.channel2_enable == 1 ) && (ac_ctrl.temp_alarm_flag == 0))
         {
             AC_Out2 = 0;
         }
-        if(( ac_dc.ac220_out3_enable == 1 ) && (ac_dc.ac220_out_temp_allow == 1))
+        if(( ac_ctrl.channel3_enable == 1 ) && (ac_ctrl.temp_alarm_flag == 0))
         {
             AC_Out3 = 0;
         }
@@ -103,11 +104,68 @@ void Tim1_ISR( void ) interrupt 3   //10ms
  *
  * @return  void
 **/
-void ac_220v_crl( uint8_t power_level )
+void AC_level_ctrl( uint8_t power_level )
 {
-    ac_dc.time_delay = 56500 + 90*power_level;
+    ac_ctrl.time_delay = 56500 + 90*power_level;
 }
 
+/**
+ * @brief	220V输出功率控制函数 
+ *
+ * @param   power_level：输出功率百分比  0%~100%
+ *
+ * @return  void
+**/
+void AC_channel_ctrl( uint8_t channel_num )
+{
+    switch (channel_num)
+    {
+    case 0:
+        ac_ctrl.channel1_enable = 0;
+        ac_ctrl.channel2_enable = 0;
+        ac_ctrl.channel3_enable = 0;
+
+        break;
+
+    case 1:
+        ac_ctrl.channel1_enable = 1;
+        ac_ctrl.channel2_enable = 0;
+        ac_ctrl.channel3_enable = 0;
+
+        break;
+
+    case 2:
+        ac_ctrl.channel1_enable = 0;
+        ac_ctrl.channel2_enable = 1;
+        ac_ctrl.channel3_enable = 0;
+        
+        break;
+
+    case 3:
+        ac_ctrl.channel1_enable = 0;
+        ac_ctrl.channel2_enable = 0;
+        ac_ctrl.channel3_enable = 1;
+        
+        break;
+
+    case 4:
+        ac_ctrl.channel1_enable = 1;
+        ac_ctrl.channel2_enable = 1;
+        ac_ctrl.channel3_enable = 0;
+        
+        break;
+
+    case 5:
+        ac_ctrl.channel1_enable = 1;
+        ac_ctrl.channel2_enable = 1;
+        ac_ctrl.channel3_enable = 1;
+        
+        break;
+
+    default:
+        break;
+    }
+}
 /**
  * @brief	24V LED开关控制函数
  *
@@ -147,9 +205,9 @@ void fan_ctrl( uint8_t level )
 **/
 void sync_ctrl( void )
 {
-    if( ac_dc.sync_flag == 1 )
+    if( slave_06.sync_switch == 1 )
     {
-        if( ac_dc.signal_in_flag == 1 )
+        if( ac_ctrl.signal_flag == 1 )
         {
             PWMB_BKR = 0x80;    //PWM控制
             EX0 = 1;            //外部中断控制
@@ -175,21 +233,23 @@ void sync_ctrl( void )
 **/
 void temp_scan( void )
 {
-    if( temp.temp_scan_flag == 1)
+    if( temp.scan_flag == 1)
     {
-        temp.temp_value1 =  get_temp(NTC);
+        temp.NTC1_value =  get_temp(NTC1);
 
         Read_DHT11();
 
-        if( temp.temp_value1 >= temp.temp_alarm_value )  
+        if( temp.NTC1_value >= slave_06.temp_alarm_value )  
         {
-            ac_dc.ac220_out_temp_allow = 0;     
+            ac_ctrl.temp_alarm_flag = 1;     
+            Buzzer = 0;
         }else
         {
-            ac_dc.ac220_out_temp_allow = 1;     
+            ac_ctrl.temp_alarm_flag = 0;    
+            Buzzer = 1; 
         }
 
-        temp.temp_scan_flag = 0;
+        temp.scan_flag = 0;
     }
 }
 
@@ -201,12 +261,16 @@ void temp_scan( void )
  * @return  
  * 
 **/
-void Power_consumption_scan( void )
+void capacity_scan( void )
 {
-    if( gonglv.gonglv_record_flag == 1 )
+    if( capacity.record_flag == 1 )
     {
+        capacity.capacity_h_H = capacity.capacity_h >> 8;
+        capacity.capacity_h_L = capacity.capacity_h;
+
         eeprom_data_record(); 
-        gonglv.gonglv_record_flag = 0;
+
+        capacity.record_flag = 0;
     }
 }
 
@@ -221,37 +285,59 @@ void mode_ctrl( uint8_t mode_num )
 {
     switch (mode_num)
     {
-        case 1:
-            ac_220v_crl(30);
+        case 1:         //节能模式
+            AC_level_ctrl(30);
             fan_ctrl(3);
 
-            eeprom.ac220_level = 30;
-            eeprom.pwm_info = 3;
+            slave_06.power_level = 30;
+            slave_06.fan_level = 3;
             eeprom_data_record();
 
             break;
 
-        case 2:
-            ac_220v_crl(50);
+        case 2:         //普通模式
+            AC_level_ctrl(50);
             fan_ctrl(4);
 
-            eeprom.ac220_level = 50;
-            eeprom.pwm_info = 4;
+            slave_06.power_level = 50;
+            slave_06.fan_level = 4;
             eeprom_data_record();
 
             break;
 
-        case 3:
-            ac_220v_crl(80);
+        case 3:         //强劲模式
+            AC_level_ctrl(80);
             fan_ctrl(6);
 
-            eeprom.ac220_level = 80;
-            eeprom.pwm_info = 6;
+            slave_06.power_level = 80;
+            slave_06.fan_level = 6;
             eeprom_data_record();
 
             break;
 
         default:
             break;
+    }
+}
+
+/**
+ * @brief	电源开关（受屏幕控制） 
+ *
+ * @param   
+ *
+ * @return  void
+**/
+void power_switch_ctrl( uint8_t power_switch )
+{
+    if( power_switch== 0 )
+    {
+        PWMB_BKR = 0x00; 
+        EX0 = 0;
+        led_ctrl(0);
+    }else
+    {
+        PWMB_BKR = 0x80;    //PWM控制
+        EX0 = 1;            //外部中断控制
+        led_ctrl(slave_06.led_switch);
     }
 }

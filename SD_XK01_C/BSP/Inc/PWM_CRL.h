@@ -21,7 +21,6 @@ typedef struct
 extern SLAVE_PWM slave_pwm;
 
 void pwm_crl( uint8_t pwm1_dutycycle, uint8_t pwm2_dutycycle, uint8_t pwm3_dutycycle,uint32_t frequency);
-void slave_fan_statu_query( void );
-void slave_fan_statu_modify( void );
+void wait_connect( void );
 
 #endif

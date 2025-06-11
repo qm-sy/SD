@@ -77,7 +77,6 @@ void SystemClock_Config(void);
   */
 int main(void)
 {
-
 	/* USER CODE BEGIN 1 */
 
 	/* USER CODE END 1 */
@@ -112,27 +111,20 @@ int main(void)
 	MX_USART2_UART_Init();
 	MX_USART3_UART_Init();
 	/* USER CODE BEGIN 2 */
-	HAL_ADCEx_Calibration_Start(&hadc1);      //ADC校准
+	HAL_ADCEx_Calibration_Start(&hadc1);		  //ADC校准
 	HAL_TIM_Base_Start_IT(&htim5);			      //TIM5使能
 	HAL_TIM_Base_Start_IT(&htim6);			      //TIM6使能
 	HAL_TIM_Base_Start_IT(&htim7);			      //TIM7使能
 
-	rs485_init();
-	HAL_UART_Receive_IT(&huart1,&rs485.rcvbuf[rs485.recount],1);
-	HAL_GPIO_WritePin(GPIOC,GPIO_PIN_12,GPIO_PIN_SET);
+	RS485_Init();
 	LCD_Init();
-	gui_init();
-	gui_icon_init();
+	GUI_Info_Init();
+	GUI_Icon_Init();
+
 	printf("========= code start ========= \r\n");
-	while (!gui_info.connect_on_flag)
-	{
-		get_slave_statu_03();
-		Modbus_Event();
-		connect_dis();
-		channel_switch();
-		delay_ms(50);
-	}
-	refresh_icon();
+
+	wait_connect();
+	GUI_Icon_Init();
 	/* USER CODE END 2 */
 	
 	/* Infinite loop */
@@ -141,10 +133,12 @@ int main(void)
 	{
 		/* USER CODE END WHILE */
 		key_scan();
-		icon_beat(gui_beat.beat_select,gui_beat.beat_switch);
-		Modbus_Event();
-		slave_statu_update();
-		//printf("The vlaue of gui_beat.beat_start_flag is %d \r\n",gui_beat.beat_start_flag);
+		if( gui_info.power_switch == true )
+		{
+			Icon_Flicker();
+			Modbus_Event();
+			gui_info_update();
+		}
 		/* USER CODE BEGIN 3 */
 	}
 	/* USER CODE END 3 */

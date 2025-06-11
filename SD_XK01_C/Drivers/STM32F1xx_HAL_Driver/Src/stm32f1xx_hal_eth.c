@@ -1710,7 +1710,7 @@ HAL_StatusTypeDef HAL_ETH_ConfigDMA(ETH_HandleTypeDef *heth, ETH_DMAInitTypeDef 
   assert_param(IS_ETH_FORWARD_UNDERSIZED_GOOD_FRAMES(dmaconf->ForwardUndersizedGoodFrames));
   assert_param(IS_ETH_RECEIVE_THRESHOLD_CONTROL(dmaconf->ReceiveThresholdControl));
   assert_param(IS_ETH_SECOND_FRAME_OPERATE(dmaconf->SecondFrameOperate));
-  assert_param(IS_ETH_ADDRESS_ALIGNED_BEATS(dmaconf->AddressAlignedBeats));
+  assert_param(IS_ETH_ADDRESS_ALIGNED_flickerS(dmaconf->AddressAlignedflickers));
   assert_param(IS_ETH_FIXED_BURST(dmaconf->FixedBurst));
   assert_param(IS_ETH_RXDMA_BURST_LENGTH(dmaconf->RxDMABurstLength));
   assert_param(IS_ETH_TXDMA_BURST_LENGTH(dmaconf->TxDMABurstLength));
@@ -1743,7 +1743,7 @@ HAL_StatusTypeDef HAL_ETH_ConfigDMA(ETH_HandleTypeDef *heth, ETH_DMAInitTypeDef 
   (heth->Instance)->DMAOMR = tmpreg1;
 
   /*----------------------- ETHERNET DMABMR Configuration --------------------*/
-  (heth->Instance)->DMABMR = (uint32_t)(dmaconf->AddressAlignedBeats |
+  (heth->Instance)->DMABMR = (uint32_t)(dmaconf->AddressAlignedflickers |
                                         dmaconf->FixedBurst |
                                         dmaconf->RxDMABurstLength | /* !! if 4xPBL is selected for Tx or Rx it is applied for the other */
                                         dmaconf->TxDMABurstLength |
@@ -1996,10 +1996,10 @@ static void ETH_MACDMAConfig(ETH_HandleTypeDef *heth, uint32_t err)
   dmainit.ForwardUndersizedGoodFrames = ETH_FORWARDUNDERSIZEDGOODFRAMES_DISABLE;
   dmainit.ReceiveThresholdControl = ETH_RECEIVEDTHRESHOLDCONTROL_64BYTES;
   dmainit.SecondFrameOperate = ETH_SECONDFRAMEOPERARTE_ENABLE;
-  dmainit.AddressAlignedBeats = ETH_ADDRESSALIGNEDBEATS_ENABLE;
+  dmainit.AddressAlignedflickers = ETH_ADDRESSALIGNEDflickerS_ENABLE;
   dmainit.FixedBurst = ETH_FIXEDBURST_ENABLE;
-  dmainit.RxDMABurstLength = ETH_RXDMABURSTLENGTH_32BEAT;
-  dmainit.TxDMABurstLength = ETH_TXDMABURSTLENGTH_32BEAT;
+  dmainit.RxDMABurstLength = ETH_RXDMABURSTLENGTH_32flicker;
+  dmainit.TxDMABurstLength = ETH_TXDMABURSTLENGTH_32flicker;
   dmainit.DescriptorSkipLength = 0x0U;
   dmainit.DMAArbitration = ETH_DMAARBITRATION_ROUNDROBIN_RXTX_1_1;
 
@@ -2037,13 +2037,13 @@ static void ETH_MACDMAConfig(ETH_HandleTypeDef *heth, uint32_t err)
   (heth->Instance)->DMAOMR = tmpreg1;
 
   /*----------------------- ETHERNET DMABMR Configuration ------------------*/
-  /* Set the AAL bit according to ETH AddressAlignedBeats value */
+  /* Set the AAL bit according to ETH AddressAlignedflickers value */
   /* Set the FB bit according to ETH FixedBurst value */
   /* Set the RPBL and 4*PBL bits according to ETH RxDMABurstLength value */
   /* Set the PBL and 4*PBL bits according to ETH TxDMABurstLength value */
   /* Set the DSL bit according to ETH DesciptorSkipLength value */
   /* Set the PR and DA bits according to ETH DMAArbitration value */
-  (heth->Instance)->DMABMR = (uint32_t)(dmainit.AddressAlignedBeats |
+  (heth->Instance)->DMABMR = (uint32_t)(dmainit.AddressAlignedflickers |
                                         dmainit.FixedBurst |
                                         dmainit.RxDMABurstLength |    /* !! if 4xPBL is selected for Tx or Rx it is applied for the other */
                                         dmainit.TxDMABurstLength |

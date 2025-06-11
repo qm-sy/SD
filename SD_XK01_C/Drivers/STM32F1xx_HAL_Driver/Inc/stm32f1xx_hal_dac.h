@@ -171,7 +171,7 @@ typedef void (*pDAC_CallbackTypeDef)(DAC_HandleTypeDef *hdac);
   * @}
   */
 
-/** @defgroup DAC_Channel_selection DAC Channel selection
+/** @defgroup DAC_channel_selectionion DAC Channel selection
   * @{
   */
 #define DAC_CHANNEL_1                      0x00000000U

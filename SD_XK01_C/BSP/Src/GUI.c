@@ -2,350 +2,56 @@
 #include "pic.h"
 
 GUI_INFO gui_info;
-GUI_BEAT gui_beat;
+GUI_FLICKER gui_flicker;
 
-void gui_init( void )
+/**
+ * @brief	界面变量初始化
+ *
+ * @param   void
+ *
+ * @return  void
+ */
+void GUI_Info_Init( void )
 {
-    gui_info.power_percentage       = 50;
+    gui_info.connect_flag           = UNCONNECT;
 
+    gui_info.sync_switch            = SYNC_OFF;
+    gui_info.channel_num            = CHANNLE_123;
+    gui_info.power_level            = 50;
     gui_info.led_switch             = LED_ON; 
     gui_info.fan_level              = LEVEL_3;
-    gui_info.mode_allow             = 0;
+    gui_info.mode_write_flag        = false;
     gui_info.mode_num               = MOED_1;
-    gui_info.channel_num            = 7;
-    gui_info.channel_select         = 0;
-    gui_info.sync_switch            = SYNC_ON;
-    gui_info.alarm_temp_value       = 50;
-    gui_info.gonglv_h               = 0.0f;
-    
-    gui_beat.beat_start_flag        = 0;
-    gui_beat.beat_clear             = 0;
+    gui_info.temp_value             = 25;
+    gui_info.temp_alarm_value       = 50;
+    gui_info.capacity_h             = 0;
+    gui_info.capacity_min           = 0;
+    gui_info.capacity               = 0.0f;
+    gui_info.power_switch           = true;
 
-    gui_beat.beat_select            = 0;
-    gui_beat.beat_switch            = BEAT_OFF; 
-    
-    gui_info.connect_on_flag        = UNCONNECT;
+    gui_flicker.start_flag          = false;
+    gui_flicker.clear_flag          = false;
+    gui_flicker.enable_flag         = false; 
+    gui_flicker.selection           = 0;
 }
 
-static void fan_beat( void )
-{   
-    if( gui_beat.beat_clear == 1 )
-    {
-        LCD_Fill(80,202,92,226,BACK_COLOR);
-    }else
-    {
-        fan_dis();
-    }
-}
-
-static void led_beat( void )
-{  
-    if( gui_beat.beat_clear == 1 )
-    {
-        LCD_Fill(137,193,169,225,BACK_COLOR);
-    }else
-    {
-        led_dis();
-    }
-}
-
-static void mode_beat( void )
-{   
-    if( gui_beat.beat_clear == 1 )
-    {
-        LCD_Fill(278,203,310,219,BACK_COLOR);
-    }else
-    {
-        mode_dis();
-    }
-}
-
-static void alarm_temp_beat( void )
-{
-    if( gui_beat.beat_clear == 1 )
-    {
-        LCD_Fill(260,54,284,70,BACK_COLOR);
-    }else
-    {
-        alarm_temp_dis();
-    }
-}
-
-void power_dis( void )
-{
-    LCD_ShowNum(110,101,gui_info.power_percentage,3,32,GREEN,BACK_COLOR);
-}
-
-void fan_dis( void )
-{
-    LCD_ShowNum(80,202,gui_info.fan_level,1,24,GREEN,BACK_COLOR);
-}
-
-void led_dis( void )
-{
-    if( gui_info.led_switch == LED_ON )
-    {
-        LCD_Show_Image_Internal_Flash(137,193,32,32,gImage_led_on,2048);
-    }else
-    {
-        LCD_Show_Image_Internal_Flash(137,193,32,32,gImage_led_off,2048);
-    }
-}
-
-void mode_dis( void )
-{
-    switch (gui_info.mode_num)
-    {
-        case 1:
-            PutChinese_16(203,278,"节",BACK_COLOR,GREEN);
-            PutChinese_16(203,295,"能",BACK_COLOR,GREEN);
-
-            break;
-
-        case 2:
-            PutChinese_16(203,278,"普",BACK_COLOR,YELLOW);
-            PutChinese_16(203,295,"通",BACK_COLOR,YELLOW);
-
-            break;
-
-        case 3:
-            PutChinese_16(203,278,"强",BACK_COLOR,BRRED);
-            PutChinese_16(203,295,"劲",BACK_COLOR,BRRED);
-
-            break;
-
-        default:
-            break;
-    }
-}
-
-void mode_select( void )
-{
-    gui_info.mode_allow = 1;
-    
-    switch (gui_info.mode_num)
-    {
-        case 1:
-            gui_info.power_percentage = 30;
-            gui_info.fan_level        = 3;
-
-            break;
-
-        case 2:
-            gui_info.power_percentage = 50;
-            gui_info.fan_level        = 4;
-
-            break;
-
-        case 3:
-            gui_info.power_percentage = 80;
-            gui_info.fan_level        = 6;
-
-            break;
-
-        default:
-            break;
-    }
-}
-
-void channel_dis( void )
-{
-    switch (gui_info.channel_select)
-    {
-        case 1: //001
-            LCD_Show_Image_Internal_Flash(29,51,46,22,gImage_channel_on,2024);
-            LCD_Show_Image_Internal_Flash(112,51,46,22,gImage_channel_off,2024);
-            LCD_Show_Image_Internal_Flash(194,51,46,22,gImage_channel_off,2024);
-            gui_info.channel_num = 1;
-
-            break;
-
-        case 2: //010
-            LCD_Show_Image_Internal_Flash(29,51,46,22,gImage_channel_off,2024);
-            LCD_Show_Image_Internal_Flash(112,51,46,22,gImage_channel_on,2024);
-            LCD_Show_Image_Internal_Flash(194,51,46,22,gImage_channel_off,2024);
-            gui_info.channel_num = 2;
-            
-            break;
-
-        case 3:
-            LCD_Show_Image_Internal_Flash(29,51,46,22,gImage_channel_off,2024);
-            LCD_Show_Image_Internal_Flash(112,51,46,22,gImage_channel_off,2024);
-            LCD_Show_Image_Internal_Flash(194,51,46,22,gImage_channel_on,2024);
-            gui_info.channel_num = 4;
-
-            break;
-
-        case 4: //011
-            LCD_Show_Image_Internal_Flash(29,51,46,22,gImage_channel_on,2024);
-            LCD_Show_Image_Internal_Flash(112,51,46,22,gImage_channel_on,2024);
-            LCD_Show_Image_Internal_Flash(194,51,46,22,gImage_channel_off,2024);
-            gui_info.channel_num = 3;
-
-            break;
-            
-        case 5: //111
-            LCD_Show_Image_Internal_Flash(29,51,46,22,gImage_channel_on,2024);
-            LCD_Show_Image_Internal_Flash(112,51,46,22,gImage_channel_on,2024);
-            LCD_Show_Image_Internal_Flash(194,51,46,22,gImage_channel_on,2024);
-            gui_info.channel_num = 7;
-
-            break;
-
-    default:
-            gui_info.channel_select = 0;
-            gui_info.channel_num = 0;
-            LCD_Show_Image_Internal_Flash(29,51,46,22,gImage_channel_off,2024);
-            LCD_Show_Image_Internal_Flash(112,51,46,22,gImage_channel_off,2024);
-            LCD_Show_Image_Internal_Flash(194,51,46,22,gImage_channel_off,2024);
-
-            break;
-    }
-}
-
-void channel_switch( void )
-{
-    if(( gui_info.channel_num == 0 ) | ( gui_info.channel_num == 1 ) | ( gui_info.channel_num == 2 ))
-    {
-        gui_info.channel_select = gui_info.channel_num;
-    }
-    if( gui_info.channel_num == 4 )
-    {
-        gui_info.channel_select = 3;
-    }
-    if( gui_info.channel_num == 3 )
-    {
-        gui_info.channel_select = 4;
-    }
-    if( gui_info.channel_num == 7 )
-    {
-        gui_info.channel_select = 5;
-    }
-}
-void alarm_temp_dis( void )
-{
-    LCD_ShowNum(260,54,gui_info.alarm_temp_value,3,16,POINT_COLOR,BACK_COLOR);
-}
-
-void temp_dis( void )
-{
-    LCD_ShowNum(260,54,gui_info.temp_value,3,16,POINT_COLOR,BACK_COLOR);
-}
-
-void alarm_icon_dis( void )
-{
-    if( gui_info.temp_value >= gui_info.alarm_temp_value )
-    {
-        LCD_Show_Image_Internal_Flash(97,3,29,29,gImage_temp_alarm_red,1682);
-    }else
-    {
-        LCD_Fill(97,3,126,32,BACK_COLOR);
-    }
-}
-void connect_dis( void )
-{
-    if( gui_info.connect_on_flag == CONNECT )
-    {
-        LCD_Fill(13,3,43,33,BACK_COLOR);
-        LCD_Show_Image_Internal_Flash(13,3,29,30,gImage_connect_on,1740);
-    }else
-    {
-        LCD_Show_Image_Internal_Flash(13,3,30,30,gImage_connect_off,1800);
-    }
-}
-
-void dht11_dis( void )
-{
-    LCD_ShowNum(215,10,gui_info.envir_temp,3,16,POINT_COLOR,BACK_COLOR);
-    LCD_ShowNum(257,10,gui_info.envir_humidity,3,16,POINT_COLOR,BACK_COLOR);
-}
-void icon_beat(uint8_t pic_code , uint8_t beat_switch )
-{
-    if( gui_beat.beat_start_flag == 1 )
-    {
-        delay_ms(1);
-        gui_beat.beat_clear = 1 -  gui_beat.beat_clear;
-        switch (pic_code)
-        {
-            case FAN_ICON:
-                fan_beat();
-                break;
-
-            case LED_ICON:
-                led_beat();
-                break;
-
-            case MODE_ICON:
-                mode_beat();
-                break;
-
-            case ALARM_TEMP:
-                alarm_temp_beat();
-                break;
-
-            default:
-                break;
-        }
-    }
-
-    gui_beat.beat_start_flag = 0; 
-}
-
-void refresh_icon( void )
-{
-    fan_dis();
-    led_dis();
-    mode_dis();
-    power_dis();
-    temp_dis();
-    alarm_icon_dis();
-    sync_dis();
-    dht11_dis();
-    channel_dis();
-}
-
-void sync_dis( void )
-{
-    if( gui_info.sync_switch == 1 )
-    {
-        LCD_Show_Image_Internal_Flash(55,3,30,30,gImage_sync_on,1800);
-    }else
-    {
-        LCD_Fill(55,3,85,33,BACK_COLOR);
-    }
-}
-
-void slave_statu_update( void )
-{
-    if( gui_beat.beat_switch == 0 )
-    {
-        if(( modbus.modbus_04_scan_flag == 1 ) && ( modbus.modbus_04_scan_allow == 1 ))
-        {
-            get_slave_statu_04();
-            temp_dis();
-            alarm_icon_dis();
-            dht11_dis();
-            gui_info.gonglv = ((gui_info.gonglv_h * 4.0f) + ( gui_info.gonglv_min *4.0f / 60.0f ));
-            delay_ms(1);
-            LCD_ShowxFloat(230,161,gui_info.gonglv,1,16,BACK_COLOR,POINT_COLOR);
-            modbus.modbus_04_scan_flag = 0;
-        }
-    }else
-    {
-        modbus.modbus_04_scan_allow = 0;
-    }   
-}
-
-void gui_icon_init( void )
+/**
+ * @brief	开机后界面初始化
+ *
+ * @param   void
+ *
+ * @return  void
+ */
+void GUI_Icon_Init( void )
 {
     /*              connect icon                */
-    LCD_Show_Image_Internal_Flash(13,3,30,30,gImage_connect_off,1800);
+    connect_dis();
 
     /*              sync icon                */
-    LCD_Show_Image_Internal_Flash(55,3,30,30,gImage_sync_on,1800);
+    sync_dis();
 
     /*              alarm icon                */
-
+    alarm_icon_dis();
 
     /*              temp && shidu icon                */
     dht11_dis();
@@ -357,7 +63,7 @@ void gui_icon_init( void )
     temp_dis();
     PutChinese_12(57,290,"度",BACK_COLOR,POINT_COLOR);
 
-    /*              gonglv icon                */
+    /*              capacity icon                */
     power_dis();
 
     LCD_Show_Image_Internal_Flash(182,113,35,35,gImage_baifenbi_big,2450);
@@ -382,6 +88,387 @@ void gui_icon_init( void )
     LCD_DrawLine(1,40,320,40,GRAY);
 
     LCD_DrawLine(20,180,300,180,GRAY);
+}
+
+/**
+ * @brief	界面信息-报警温度 跳动
+ *
+ * @param   void
+ *
+ * @return  void
+ */
+static void temp_alarm_flicker( void )
+{
+    if( gui_flicker.clear_flag == true )
+    {
+        LCD_Fill(260,54,284,70,BACK_COLOR);
+    }else
+    {
+        temp_alarm_dis();
+    }
+    
+}
+
+/**
+ * @brief	界面信息-风扇档位 跳动
+ *
+ * @param   void
+ *
+ * @return  void
+ */
+static void fan_flicker( void )
+{   
+    if( gui_flicker.clear_flag == true )
+    {
+        LCD_Fill(80,202,92,226,BACK_COLOR);
+    }else
+    {
+        fan_dis();
+    }
+}
+
+/**
+ * @brief	界面信息-LED开关状态 跳动
+ *
+ * @param   void
+ *
+ * @return  void
+ */
+static void led_flicker( void )
+{  
+    if( gui_flicker.clear_flag == true )
+    {
+        LCD_Fill(137,193,169,225,BACK_COLOR);
+    }else
+    {
+        led_dis();
+    }
+}
+
+/**
+ * @brief	界面信息-模式选择 跳动
+ *
+ * @param   void
+ *
+ * @return  void
+ */
+static void mode_flicker( void )
+{   
+    if( gui_flicker.clear_flag == true )
+    {
+        LCD_Fill(278,203,310,219,BACK_COLOR);
+    }else
+    {
+        mode_dis();
+    }
+}
+
+/**
+ * @brief	界面信息-连接状态 显示
+ *
+ * @param   void
+ *
+ * @return  void
+ */
+void connect_dis( void )
+{
+    if( gui_info.connect_flag == true )
+    {
+        LCD_Show_Image_Internal_Flash(13,3,29,30,gImage_connect_on,1740);
+    }else
+    {
+        LCD_Show_Image_Internal_Flash(13,3,30,30,gImage_connect_off,1800);
+    }
+}
+
+/**
+ * @brief	界面信息-同步状态 显示
+ *
+ * @param   void
+ *
+ * @return  void
+ */
+void sync_dis( void )
+{
+    if( gui_info.sync_switch == SYNC_ON )
+    {
+        LCD_Show_Image_Internal_Flash(55,3,30,30,gImage_sync_on,1800);
+    }else
+    {
+        LCD_Fill(55,3,85,33,BACK_COLOR);
+    }
+}
+
+/**
+ * @brief	界面信息-温度报警开关状态 显示
+ *
+ * @param   void
+ *
+ * @return  void
+ */
+void alarm_icon_dis( void )
+{
+    if( gui_info.temp_value >= gui_info.temp_alarm_value )
+    {
+        LCD_Show_Image_Internal_Flash(97,3,29,29,gImage_temp_alarm_red,1682);
+    }else
+    {
+        LCD_Fill(97,3,126,32,BACK_COLOR);
+    }
+}
+
+/**
+ * @brief	界面信息-温湿度 显示
+ *
+ * @param   void
+ *
+ * @return  void
+ */
+void dht11_dis( void )
+{
+    LCD_ShowNum(215,10,gui_info.envir_temp,3,16,POINT_COLOR,BACK_COLOR);
+    LCD_ShowNum(257,10,gui_info.envir_humidity,3,16,POINT_COLOR,BACK_COLOR);
+}
+
+/**
+ * @brief	界面信息-通道选择 显示
+ *
+ * @param   void
+ *
+ * @return  void
+ */
+void channel_dis( void )
+{
+    switch (gui_info.channel_num)
+    {
+        case CHANNLE_1: 
+            LCD_Show_Image_Internal_Flash(29,51,46,22,gImage_channel_on,2024);
+            LCD_Show_Image_Internal_Flash(112,51,46,22,gImage_channel_off,2024);
+            LCD_Show_Image_Internal_Flash(194,51,46,22,gImage_channel_off,2024);
+
+            break;
+
+        case CHANNLE_2: 
+            LCD_Show_Image_Internal_Flash(29,51,46,22,gImage_channel_off,2024);
+            LCD_Show_Image_Internal_Flash(112,51,46,22,gImage_channel_on,2024);
+            LCD_Show_Image_Internal_Flash(194,51,46,22,gImage_channel_off,2024);
+
+            break;
+
+        case CHANNLE_3:
+            LCD_Show_Image_Internal_Flash(29,51,46,22,gImage_channel_off,2024);
+            LCD_Show_Image_Internal_Flash(112,51,46,22,gImage_channel_off,2024);
+            LCD_Show_Image_Internal_Flash(194,51,46,22,gImage_channel_on,2024);
+
+            break;
+
+        case CHANNLE_12: 
+            LCD_Show_Image_Internal_Flash(29,51,46,22,gImage_channel_on,2024);
+            LCD_Show_Image_Internal_Flash(112,51,46,22,gImage_channel_on,2024);
+            LCD_Show_Image_Internal_Flash(194,51,46,22,gImage_channel_off,2024);
+
+            break;
+            
+        case CHANNLE_123: 
+            LCD_Show_Image_Internal_Flash(29,51,46,22,gImage_channel_on,2024);
+            LCD_Show_Image_Internal_Flash(112,51,46,22,gImage_channel_on,2024);
+            LCD_Show_Image_Internal_Flash(194,51,46,22,gImage_channel_on,2024);
+
+            break;
+
+    default:
+            LCD_Show_Image_Internal_Flash(29,51,46,22,gImage_channel_off,2024);
+            LCD_Show_Image_Internal_Flash(112,51,46,22,gImage_channel_off,2024);
+            LCD_Show_Image_Internal_Flash(194,51,46,22,gImage_channel_off,2024);
+
+            break;
+    }
+}
+
+/**
+ * @brief	界面信息-报警温度 显示
+ *
+ * @param   void
+ *
+ * @return  void
+ */
+void temp_alarm_dis( void )
+{
+    LCD_ShowNum(260,54,gui_info.temp_alarm_value,3,16,POINT_COLOR,BACK_COLOR);
+}
+
+/**
+ * @brief	界面信息-温度 显示
+ *
+ * @param   void
+ *
+ * @return  void
+ */
+void temp_dis( void )
+{
+    LCD_ShowNum(260,54,gui_info.temp_value,3,16,POINT_COLOR,BACK_COLOR);
+}
+
+
+/**
+ * @brief	界面信息-功率档位 显示
+ *
+ * @param   void
+ *
+ * @return  void
+ */
+void power_dis( void )
+{
+    LCD_ShowNum(110,101,gui_info.power_level,3,32,GREEN,BACK_COLOR);
+}
+
+/**
+ * @brief	界面信息-功率 显示
+ *
+ * @param   void
+ *
+ * @return  void
+ */
+void capacity_dis( void )
+{
+    gui_info.capacity = ((gui_info.capacity_h * 4.0f) + ( gui_info.capacity_min *4.0f / 60.0f ));
+    delay_ms(1);
+    LCD_ShowxFloat(230,161,gui_info.capacity,1,16,BACK_COLOR,POINT_COLOR);
+}
+
+/**
+ * @brief	界面信息-风扇档位 显示
+ *
+ * @param   void
+ *
+ * @return  void
+ */
+void fan_dis( void )
+{
+    LCD_ShowNum(80,202,gui_info.fan_level,1,24,GREEN,BACK_COLOR);
+}
+
+/**
+ * @brief	界面信息-LED开关状态 显示
+ *
+ * @param   void
+ *
+ * @return  void
+ */
+void led_dis( void )
+{
+    if( gui_info.led_switch == LED_ON )
+    {
+        LCD_Show_Image_Internal_Flash(137,193,32,32,gImage_led_on,2048);
+    }else
+    {
+        LCD_Show_Image_Internal_Flash(137,193,32,32,gImage_led_off,2048);
+    }
+}
+
+/**
+ * @brief	界面信息-模式选择 显示
+ *
+ * @param   void
+ *
+ * @return  void
+ */
+void mode_dis( void )
+{
+    switch (gui_info.mode_num)
+    {
+        case MOED_1:
+            PutChinese_16(203,278,"节",BACK_COLOR,GREEN);
+            PutChinese_16(203,295,"能",BACK_COLOR,GREEN);
+
+            break;
+
+        case MOED_2:
+            PutChinese_16(203,278,"普",BACK_COLOR,YELLOW);
+            PutChinese_16(203,295,"通",BACK_COLOR,YELLOW);
+
+            break;
+
+        case MOED_3:
+            PutChinese_16(203,278,"强",BACK_COLOR,BRRED);
+            PutChinese_16(203,295,"劲",BACK_COLOR,BRRED);
+
+            break;
+
+        default:
+            PutChinese_16(203,278,"普",BACK_COLOR,YELLOW);
+            PutChinese_16(203,295,"通",BACK_COLOR,YELLOW);
+
+            break;
+    }
+}
+
+/**
+ * @brief	界面信息-图标闪烁控制 
+ *
+ * @param   void
+ *
+ * @return  void
+ */
+void Icon_Flicker( void )
+{
+    if( gui_flicker.start_flag == 1 )
+    {
+        gui_flicker.clear_flag = !gui_flicker.clear_flag;
+
+        switch (gui_flicker.selection)
+        {
+            case FAN_ICON:      fan_flicker();          break;
+
+            case LED_ICON:      led_flicker();          break;
+
+            case MODE_ICON:     mode_flicker();         break;
+
+            case TEMP_ALARM:    temp_alarm_flicker();   break;
+
+            default:                                    break;
+        }
+    }
+
+    gui_flicker.start_flag = 0; 
+}
+
+/**
+ * @brief	界面信息-更新（04寄存器）
+ *
+ * @param   void
+ *
+ * @return  void
+ */
+void gui_info_update( void )
+{
+    if( gui_flicker.enable_flag == false )
+    {
+        if(( modbus.modbus_04_scan_flag == true ) && ( modbus.modbus_04_scan_allow == true ))
+        {
+            /*      1.读取从机04寄存器信息       */
+            read_slave_04();
+
+            /*      2.刷新屏幕       */
+            gui_info_refresh();    
+            modbus.modbus_04_scan_flag = 0;
+        }
+    }  
+}
+
+/**
+ * @brief	读取从机04寄存器后刷新屏幕显示
+ *
+ * @param   void
+ *
+ * @return  void
+ */
+void gui_info_refresh( void )
+{
+    temp_dis();
+    alarm_icon_dis();
+    dht11_dis();
+    capacity_dis();    
 }
 
 

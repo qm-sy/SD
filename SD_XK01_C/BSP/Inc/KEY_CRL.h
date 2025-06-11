@@ -45,4 +45,6 @@ void buzzer_close( void );
 
 void jump_to_init( void );
 
+void mode_select( void );
+
 #endif

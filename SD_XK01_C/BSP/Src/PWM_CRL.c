@@ -27,3 +27,14 @@ void pwm_crl( uint8_t pwm1_dutycycle, uint8_t pwm2_dutycycle, uint8_t pwm3_dutyc
     htim4.Instance->CCR3 = ((uint32_t)pwm2_dutycycle * Fpwm) / 100 ;
     htim4.Instance->CCR4 = ((uint32_t)pwm3_dutycycle * Fpwm) / 100 ;
 }
+
+void wait_connect( void )
+{
+    while (!gui_info.connect_flag)
+	{
+		read_slave_03();
+		Modbus_Event();
+		connect_dis();
+		delay_ms(50);
+	}
+}

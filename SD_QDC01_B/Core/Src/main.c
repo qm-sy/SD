@@ -21,14 +21,15 @@ void main( void )
     PWM_Init();
 
     /*  3路220输出控制  */
-    Power_Statu_Init();
+    Power_Init();
     INT0_Init();
     Timer1_Init();
+    Temp_Init();
 
     /*  定时事件  */
     Timer3_Init();
 
-    Power_consumption_Init();
+    Capacity_Init();    //累计耗电计算参数初始化
 
     EA = 1;     //中断总开关
 
@@ -39,8 +40,11 @@ void main( void )
     while (1)
     {
         Modbus_Event();
-        temp_scan();
-        sync_ctrl();  
-        Power_consumption_scan();
+        if( slave_06.power_switch == 1 )
+        {
+            temp_scan();
+            sync_ctrl();  
+            capacity_scan();
+        }
     }  
 }

@@ -161,34 +161,34 @@ extern "C" {
                                                      ((THRESHOLD) == ETH_RECEIVEDTHRESHOLDCONTROL_128BYTES))
 #define IS_ETH_SECOND_FRAME_OPERATE(CMD) (((CMD) == ETH_SECONDFRAMEOPERARTE_ENABLE) || \
                                           ((CMD) == ETH_SECONDFRAMEOPERARTE_DISABLE))
-#define IS_ETH_ADDRESS_ALIGNED_BEATS(CMD) (((CMD) == ETH_ADDRESSALIGNEDBEATS_ENABLE) || \
-                                           ((CMD) == ETH_ADDRESSALIGNEDBEATS_DISABLE))
+#define IS_ETH_ADDRESS_ALIGNED_flickerS(CMD) (((CMD) == ETH_ADDRESSALIGNEDflickerS_ENABLE) || \
+                                           ((CMD) == ETH_ADDRESSALIGNEDflickerS_DISABLE))
 #define IS_ETH_FIXED_BURST(CMD) (((CMD) == ETH_FIXEDBURST_ENABLE) || \
                                  ((CMD) == ETH_FIXEDBURST_DISABLE))
-#define IS_ETH_RXDMA_BURST_LENGTH(LENGTH) (((LENGTH) == ETH_RXDMABURSTLENGTH_1BEAT) || \
-                                           ((LENGTH) == ETH_RXDMABURSTLENGTH_2BEAT) || \
-                                           ((LENGTH) == ETH_RXDMABURSTLENGTH_4BEAT) || \
-                                           ((LENGTH) == ETH_RXDMABURSTLENGTH_8BEAT) || \
-                                           ((LENGTH) == ETH_RXDMABURSTLENGTH_16BEAT) || \
-                                           ((LENGTH) == ETH_RXDMABURSTLENGTH_32BEAT) || \
-                                           ((LENGTH) == ETH_RXDMABURSTLENGTH_4XPBL_4BEAT) || \
-                                           ((LENGTH) == ETH_RXDMABURSTLENGTH_4XPBL_8BEAT) || \
-                                           ((LENGTH) == ETH_RXDMABURSTLENGTH_4XPBL_16BEAT) || \
-                                           ((LENGTH) == ETH_RXDMABURSTLENGTH_4XPBL_32BEAT) || \
-                                           ((LENGTH) == ETH_RXDMABURSTLENGTH_4XPBL_64BEAT) || \
-                                           ((LENGTH) == ETH_RXDMABURSTLENGTH_4XPBL_128BEAT))
-#define IS_ETH_TXDMA_BURST_LENGTH(LENGTH) (((LENGTH) == ETH_TXDMABURSTLENGTH_1BEAT) || \
-                                           ((LENGTH) == ETH_TXDMABURSTLENGTH_2BEAT) || \
-                                           ((LENGTH) == ETH_TXDMABURSTLENGTH_4BEAT) || \
-                                           ((LENGTH) == ETH_TXDMABURSTLENGTH_8BEAT) || \
-                                           ((LENGTH) == ETH_TXDMABURSTLENGTH_16BEAT) || \
-                                           ((LENGTH) == ETH_TXDMABURSTLENGTH_32BEAT) || \
-                                           ((LENGTH) == ETH_TXDMABURSTLENGTH_4XPBL_4BEAT) || \
-                                           ((LENGTH) == ETH_TXDMABURSTLENGTH_4XPBL_8BEAT) || \
-                                           ((LENGTH) == ETH_TXDMABURSTLENGTH_4XPBL_16BEAT) || \
-                                           ((LENGTH) == ETH_TXDMABURSTLENGTH_4XPBL_32BEAT) || \
-                                           ((LENGTH) == ETH_TXDMABURSTLENGTH_4XPBL_64BEAT) || \
-                                           ((LENGTH) == ETH_TXDMABURSTLENGTH_4XPBL_128BEAT))
+#define IS_ETH_RXDMA_BURST_LENGTH(LENGTH) (((LENGTH) == ETH_RXDMABURSTLENGTH_1flicker) || \
+                                           ((LENGTH) == ETH_RXDMABURSTLENGTH_2flicker) || \
+                                           ((LENGTH) == ETH_RXDMABURSTLENGTH_4flicker) || \
+                                           ((LENGTH) == ETH_RXDMABURSTLENGTH_8flicker) || \
+                                           ((LENGTH) == ETH_RXDMABURSTLENGTH_16flicker) || \
+                                           ((LENGTH) == ETH_RXDMABURSTLENGTH_32flicker) || \
+                                           ((LENGTH) == ETH_RXDMABURSTLENGTH_4XPBL_4flicker) || \
+                                           ((LENGTH) == ETH_RXDMABURSTLENGTH_4XPBL_8flicker) || \
+                                           ((LENGTH) == ETH_RXDMABURSTLENGTH_4XPBL_16flicker) || \
+                                           ((LENGTH) == ETH_RXDMABURSTLENGTH_4XPBL_32flicker) || \
+                                           ((LENGTH) == ETH_RXDMABURSTLENGTH_4XPBL_64flicker) || \
+                                           ((LENGTH) == ETH_RXDMABURSTLENGTH_4XPBL_128flicker))
+#define IS_ETH_TXDMA_BURST_LENGTH(LENGTH) (((LENGTH) == ETH_TXDMABURSTLENGTH_1flicker) || \
+                                           ((LENGTH) == ETH_TXDMABURSTLENGTH_2flicker) || \
+                                           ((LENGTH) == ETH_TXDMABURSTLENGTH_4flicker) || \
+                                           ((LENGTH) == ETH_TXDMABURSTLENGTH_8flicker) || \
+                                           ((LENGTH) == ETH_TXDMABURSTLENGTH_16flicker) || \
+                                           ((LENGTH) == ETH_TXDMABURSTLENGTH_32flicker) || \
+                                           ((LENGTH) == ETH_TXDMABURSTLENGTH_4XPBL_4flicker) || \
+                                           ((LENGTH) == ETH_TXDMABURSTLENGTH_4XPBL_8flicker) || \
+                                           ((LENGTH) == ETH_TXDMABURSTLENGTH_4XPBL_16flicker) || \
+                                           ((LENGTH) == ETH_TXDMABURSTLENGTH_4XPBL_32flicker) || \
+                                           ((LENGTH) == ETH_TXDMABURSTLENGTH_4XPBL_64flicker) || \
+                                           ((LENGTH) == ETH_TXDMABURSTLENGTH_4XPBL_128flicker))
 #define IS_ETH_DMA_DESC_SKIP_LENGTH(LENGTH) ((LENGTH) <= 0x1FU)
 #define IS_ETH_DMA_ARBITRATION_ROUNDROBIN_RXTX(RATIO) (((RATIO) == ETH_DMAARBITRATION_ROUNDROBIN_RXTX_1_1) || \
                                                        ((RATIO) == ETH_DMAARBITRATION_ROUNDROBIN_RXTX_2_1) || \
@@ -538,16 +538,16 @@ typedef struct
                                                              frame of Transmit data even before obtaining the status for the first frame.
                                                              This parameter can be a value of @ref ETH_Second_Frame_Operate */
 
-  uint32_t             AddressAlignedBeats;         /*!< Enables or disables the Address Aligned Beats.
-                                                             This parameter can be a value of @ref ETH_Address_Aligned_Beats */
+  uint32_t             AddressAlignedflickers;         /*!< Enables or disables the Address Aligned flickers.
+                                                             This parameter can be a value of @ref ETH_Address_Aligned_flickers */
 
   uint32_t             FixedBurst;                  /*!< Enables or disables the AHB Master interface fixed burst transfers.
                                                              This parameter can be a value of @ref ETH_Fixed_Burst */
 
-  uint32_t             RxDMABurstLength;            /*!< Indicates the maximum number of beats to be transferred in one Rx DMA transaction.
+  uint32_t             RxDMABurstLength;            /*!< Indicates the maximum number of flickers to be transferred in one Rx DMA transaction.
                                                              This parameter can be a value of @ref ETH_Rx_DMA_Burst_Length */
 
-  uint32_t             TxDMABurstLength;            /*!< Indicates the maximum number of beats to be transferred in one Tx DMA transaction.
+  uint32_t             TxDMABurstLength;            /*!< Indicates the maximum number of flickers to be transferred in one Tx DMA transaction.
                                                              This parameter can be a value of @ref ETH_Tx_DMA_Burst_Length */
 
   uint32_t             DescriptorSkipLength;        /*!< Specifies the number of word to skip between two unchained descriptors (Ring mode)
@@ -1275,11 +1275,11 @@ typedef  void (*pETH_CallbackTypeDef)(ETH_HandleTypeDef *heth);  /*!< pointer to
   * @}
   */
 
-/** @defgroup ETH_Address_Aligned_Beats ETH Address Aligned Beats
+/** @defgroup ETH_Address_Aligned_flickers ETH Address Aligned flickers
   * @{
   */
-#define ETH_ADDRESSALIGNEDBEATS_ENABLE      0x02000000U
-#define ETH_ADDRESSALIGNEDBEATS_DISABLE     0x00000000U
+#define ETH_ADDRESSALIGNEDflickerS_ENABLE      0x02000000U
+#define ETH_ADDRESSALIGNEDflickerS_DISABLE     0x00000000U
 /**
   * @}
   */
@@ -1296,18 +1296,18 @@ typedef  void (*pETH_CallbackTypeDef)(ETH_HandleTypeDef *heth);  /*!< pointer to
 /** @defgroup ETH_Rx_DMA_Burst_Length ETH Rx DMA Burst Length
   * @{
   */
-#define ETH_RXDMABURSTLENGTH_1BEAT          0x00020000U  /*!< maximum number of beats to be transferred in one RxDMA transaction is 1 */
-#define ETH_RXDMABURSTLENGTH_2BEAT          0x00040000U  /*!< maximum number of beats to be transferred in one RxDMA transaction is 2 */
-#define ETH_RXDMABURSTLENGTH_4BEAT          0x00080000U  /*!< maximum number of beats to be transferred in one RxDMA transaction is 4 */
-#define ETH_RXDMABURSTLENGTH_8BEAT          0x00100000U  /*!< maximum number of beats to be transferred in one RxDMA transaction is 8 */
-#define ETH_RXDMABURSTLENGTH_16BEAT         0x00200000U  /*!< maximum number of beats to be transferred in one RxDMA transaction is 16 */
-#define ETH_RXDMABURSTLENGTH_32BEAT         0x00400000U  /*!< maximum number of beats to be transferred in one RxDMA transaction is 32 */
-#define ETH_RXDMABURSTLENGTH_4XPBL_4BEAT    0x01020000U  /*!< maximum number of beats to be transferred in one RxDMA transaction is 4 */
-#define ETH_RXDMABURSTLENGTH_4XPBL_8BEAT    0x01040000U  /*!< maximum number of beats to be transferred in one RxDMA transaction is 8 */
-#define ETH_RXDMABURSTLENGTH_4XPBL_16BEAT   0x01080000U  /*!< maximum number of beats to be transferred in one RxDMA transaction is 16 */
-#define ETH_RXDMABURSTLENGTH_4XPBL_32BEAT   0x01100000U  /*!< maximum number of beats to be transferred in one RxDMA transaction is 32 */
-#define ETH_RXDMABURSTLENGTH_4XPBL_64BEAT   0x01200000U  /*!< maximum number of beats to be transferred in one RxDMA transaction is 64 */
-#define ETH_RXDMABURSTLENGTH_4XPBL_128BEAT  0x01400000U  /*!< maximum number of beats to be transferred in one RxDMA transaction is 128 */
+#define ETH_RXDMABURSTLENGTH_1flicker          0x00020000U  /*!< maximum number of flickers to be transferred in one RxDMA transaction is 1 */
+#define ETH_RXDMABURSTLENGTH_2flicker          0x00040000U  /*!< maximum number of flickers to be transferred in one RxDMA transaction is 2 */
+#define ETH_RXDMABURSTLENGTH_4flicker          0x00080000U  /*!< maximum number of flickers to be transferred in one RxDMA transaction is 4 */
+#define ETH_RXDMABURSTLENGTH_8flicker          0x00100000U  /*!< maximum number of flickers to be transferred in one RxDMA transaction is 8 */
+#define ETH_RXDMABURSTLENGTH_16flicker         0x00200000U  /*!< maximum number of flickers to be transferred in one RxDMA transaction is 16 */
+#define ETH_RXDMABURSTLENGTH_32flicker         0x00400000U  /*!< maximum number of flickers to be transferred in one RxDMA transaction is 32 */
+#define ETH_RXDMABURSTLENGTH_4XPBL_4flicker    0x01020000U  /*!< maximum number of flickers to be transferred in one RxDMA transaction is 4 */
+#define ETH_RXDMABURSTLENGTH_4XPBL_8flicker    0x01040000U  /*!< maximum number of flickers to be transferred in one RxDMA transaction is 8 */
+#define ETH_RXDMABURSTLENGTH_4XPBL_16flicker   0x01080000U  /*!< maximum number of flickers to be transferred in one RxDMA transaction is 16 */
+#define ETH_RXDMABURSTLENGTH_4XPBL_32flicker   0x01100000U  /*!< maximum number of flickers to be transferred in one RxDMA transaction is 32 */
+#define ETH_RXDMABURSTLENGTH_4XPBL_64flicker   0x01200000U  /*!< maximum number of flickers to be transferred in one RxDMA transaction is 64 */
+#define ETH_RXDMABURSTLENGTH_4XPBL_128flicker  0x01400000U  /*!< maximum number of flickers to be transferred in one RxDMA transaction is 128 */
 /**
   * @}
   */
@@ -1315,18 +1315,18 @@ typedef  void (*pETH_CallbackTypeDef)(ETH_HandleTypeDef *heth);  /*!< pointer to
 /** @defgroup ETH_Tx_DMA_Burst_Length ETH Tx DMA Burst Length
   * @{
   */
-#define ETH_TXDMABURSTLENGTH_1BEAT          0x00000100U  /*!< maximum number of beats to be transferred in one TxDMA (or both) transaction is 1 */
-#define ETH_TXDMABURSTLENGTH_2BEAT          0x00000200U  /*!< maximum number of beats to be transferred in one TxDMA (or both) transaction is 2 */
-#define ETH_TXDMABURSTLENGTH_4BEAT          0x00000400U  /*!< maximum number of beats to be transferred in one TxDMA (or both) transaction is 4 */
-#define ETH_TXDMABURSTLENGTH_8BEAT          0x00000800U  /*!< maximum number of beats to be transferred in one TxDMA (or both) transaction is 8 */
-#define ETH_TXDMABURSTLENGTH_16BEAT         0x00001000U  /*!< maximum number of beats to be transferred in one TxDMA (or both) transaction is 16 */
-#define ETH_TXDMABURSTLENGTH_32BEAT         0x00002000U  /*!< maximum number of beats to be transferred in one TxDMA (or both) transaction is 32 */
-#define ETH_TXDMABURSTLENGTH_4XPBL_4BEAT    0x01000100U  /*!< maximum number of beats to be transferred in one TxDMA (or both) transaction is 4 */
-#define ETH_TXDMABURSTLENGTH_4XPBL_8BEAT    0x01000200U  /*!< maximum number of beats to be transferred in one TxDMA (or both) transaction is 8 */
-#define ETH_TXDMABURSTLENGTH_4XPBL_16BEAT   0x01000400U  /*!< maximum number of beats to be transferred in one TxDMA (or both) transaction is 16 */
-#define ETH_TXDMABURSTLENGTH_4XPBL_32BEAT   0x01000800U  /*!< maximum number of beats to be transferred in one TxDMA (or both) transaction is 32 */
-#define ETH_TXDMABURSTLENGTH_4XPBL_64BEAT   0x01001000U  /*!< maximum number of beats to be transferred in one TxDMA (or both) transaction is 64 */
-#define ETH_TXDMABURSTLENGTH_4XPBL_128BEAT  0x01002000U  /*!< maximum number of beats to be transferred in one TxDMA (or both) transaction is 128 */
+#define ETH_TXDMABURSTLENGTH_1flicker          0x00000100U  /*!< maximum number of flickers to be transferred in one TxDMA (or both) transaction is 1 */
+#define ETH_TXDMABURSTLENGTH_2flicker          0x00000200U  /*!< maximum number of flickers to be transferred in one TxDMA (or both) transaction is 2 */
+#define ETH_TXDMABURSTLENGTH_4flicker          0x00000400U  /*!< maximum number of flickers to be transferred in one TxDMA (or both) transaction is 4 */
+#define ETH_TXDMABURSTLENGTH_8flicker          0x00000800U  /*!< maximum number of flickers to be transferred in one TxDMA (or both) transaction is 8 */
+#define ETH_TXDMABURSTLENGTH_16flicker         0x00001000U  /*!< maximum number of flickers to be transferred in one TxDMA (or both) transaction is 16 */
+#define ETH_TXDMABURSTLENGTH_32flicker         0x00002000U  /*!< maximum number of flickers to be transferred in one TxDMA (or both) transaction is 32 */
+#define ETH_TXDMABURSTLENGTH_4XPBL_4flicker    0x01000100U  /*!< maximum number of flickers to be transferred in one TxDMA (or both) transaction is 4 */
+#define ETH_TXDMABURSTLENGTH_4XPBL_8flicker    0x01000200U  /*!< maximum number of flickers to be transferred in one TxDMA (or both) transaction is 8 */
+#define ETH_TXDMABURSTLENGTH_4XPBL_16flicker   0x01000400U  /*!< maximum number of flickers to be transferred in one TxDMA (or both) transaction is 16 */
+#define ETH_TXDMABURSTLENGTH_4XPBL_32flicker   0x01000800U  /*!< maximum number of flickers to be transferred in one TxDMA (or both) transaction is 32 */
+#define ETH_TXDMABURSTLENGTH_4XPBL_64flicker   0x01001000U  /*!< maximum number of flickers to be transferred in one TxDMA (or both) transaction is 64 */
+#define ETH_TXDMABURSTLENGTH_4XPBL_128flicker  0x01002000U  /*!< maximum number of flickers to be transferred in one TxDMA (or both) transaction is 128 */
 
 /**
   * @}

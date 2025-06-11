@@ -129,7 +129,7 @@ LINK MAP OF MODULE:  ..\Output\QDC01_B (DELAY)
             CODE    16F3H     0019H     UNIT         ?PR?UART4_SEND_STATU_INIT?COMMUNICATION
             CODE    170CH     0016H     UNIT         ?PR?UART4_INIT?UART
             CODE    1722H     0014H     UNIT         ?PR?_DELAY_US?DELAY
-            CODE    1736H     0014H     UNIT         ?PR?POWER_STATU_INIT?POWER_CRL
+            CODE    1736H     0014H     UNIT         ?PR?Power_Init?POWER_CRL
             CODE    174AH     0014H     UNIT         ?PR?_AC_220V_CRL?POWER_CRL
             CODE    175EH     0013H     UNIT         ?PR?TIMER0_INIT?TIM
             CODE    1771H     0010H     UNIT         ?PR?TIMER3_INIT?TIM
@@ -160,7 +160,7 @@ SEGMENT                                            BIT_GROUP          DATA_GROUP
   +--> ?PR?UART4_SEND_STATU_INIT?COMMUNICATION
   +--> ?PR?TIMER0_INIT?TIM
   +--> ?PR?PWM_INIT?PWM
-  +--> ?PR?POWER_STATU_INIT?POWER_CRL
+  +--> ?PR?Power_Init?POWER_CRL
   +--> ?PR?INT0_INIT?TIM
   +--> ?PR?TIMER1_INIT?TIM
   +--> ?PR?TIMER3_INIT?TIM
@@ -1115,7 +1115,7 @@ SYMBOL TABLE OF MODULE:  ..\Output\QDC01_B (DELAY)
   D:00E8H         PUBLIC        P6
   D:00F8H         PUBLIC        P7
   D:00A8H         PUBLIC        IE
-  X:0233H         PUBLIC        gonglv
+  X:0233H         PUBLIC        capacity
   D:00B8H         PUBLIC        IP
   C:133AH         PUBLIC        Tim1_ISR
   C:1781H         PUBLIC        Power_consumption_Init
@@ -1133,18 +1133,18 @@ SYMBOL TABLE OF MODULE:  ..\Output\QDC01_B (DELAY)
   B:00C0H.2       PUBLIC        AC_Out2
   B:00C0H.3       PUBLIC        AC_Out3
   D:008BH         PUBLIC        TL1
-  C:174AH         PUBLIC        _ac_220v_crl
+  C:174AH         PUBLIC        _AC_level_ctrl
   B:00A0H.3       PUBLIC        LED
   C:15EBH         PUBLIC        sync_ctrl
   B:0088H.6       PUBLIC        TR1
   C:1552H         PUBLIC        INT0_ISR
-  X:0239H         PUBLIC        ac_dc
+  X:0239H         PUBLIC        slave_06
 BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  05/08/2025  15:37:02  PAGE 20
 
 
   D:00D0H         PUBLIC        PSW
-  C:1736H         PUBLIC        Power_Statu_Init
-  -------         PROC          POWER_STATU_INIT
+  C:1736H         PUBLIC        Power_Init
+  -------         PROC          Power_Init
   C:1736H         LINE#         13
   C:1736H         LINE#         14
   C:1736H         LINE#         15
@@ -1152,7 +1152,7 @@ SYMBOL TABLE OF MODULE:  ..\Output\QDC01_B (DELAY)
   C:173FH         LINE#         17
   C:1743H         LINE#         18
   C:1749H         LINE#         19
-  -------         ENDPROC       POWER_STATU_INIT
+  -------         ENDPROC       Power_Init
   -------         PROC          POWER_CONSUMPTION_INIT
   C:1781H         LINE#         28
   C:1781H         LINE#         29
@@ -1341,7 +1341,7 @@ SYMBOL TABLE OF MODULE:  ..\Output\QDC01_B (DELAY)
   X:0250H         SYMBOL        channel1_cnt
   X:0251H         SYMBOL        channel2_cnt
   X:0252H         SYMBOL        channel3_cnt
-  X:0253H         SYMBOL        gonglv_time
+  X:0253H         SYMBOL        capacity_time
   X:0255H         SYMBOL        ac220_flag_cnt
   -------         ENDDO         
   C:0704H         LINE#         10
